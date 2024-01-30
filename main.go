@@ -1,16 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"steam-checker/steam_api"
+	"steam-checker/config"
+	"steam-checker/services"
 )
 
-const apiKey = "3CE1C3E26481CE20CBA13961D1123A52"
-
 func main() {
-	games, err := steam_api.GetAppDetails(apiKey, []string{}, "363440")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(games)
+	//games, err := steam_api.GetAppDetails(apiKey, []string{}, "363440")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(games)
+
+	config.LoadSettings()
+
+	//err := services.InitiateGame("2071280")
+	//
+	//if err != nil {
+	//	panic(err)
+	//}
+	services.InitiateGames()
 }
