@@ -12,44 +12,42 @@ import (
 	"steam-checker/steam_api"
 )
 
-func InitiateGame(appId int) error {
+func InitiateApp(appInit AppInitial) error {
 
-	// Set client options
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI(config.GlobalSettings.MongoDBURI)
 
-	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Check the connection
+
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Get a handle for your collection
-	collection := client.Database(config.GlobalSettings.DatabaseName).Collection("api")
-	filter := bson.D{{"steamappid", appId}}
+
+	collection := client.Database(config.GlobalSettings.DatabaseName).Collection("apps")
+	filter := bson.D{{"steamappid", appInit.AppId}}
 	count, err := collection.CountDocuments(context.TODO(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	if count > 0 {
-		return errors.New(fmt.Sprintf("Game %s already exists.", appId))
+		return errors.New(fmt.Sprintf("App %d already exists.", appInit.AppId))
 	}
 
-	games, err := steam_api.GetAppDetails(config.GlobalSettings.AppKey, []string{}, appId)
+	apps, err := steam_api.GetAppDetails(config.GlobalSettings.AppKey, []string{}, appInit.AppId)
 
 	if err != nil {
 		return err
 	}
 
-	gameData := games[0]
+	appData := apps[0]
 
-	game := FromGameData(gameData)
-	// Insert a single document
-	insertResult, err := collection.InsertOne(context.TODO(), game)
+	app := FromAppData(appData, appInit.CheckPrice, appInit.CheckNews)
+
+	insertResult, err := collection.InsertOne(context.TODO(), app)
 
 	if err != nil {
 		log.Fatal(err)
@@ -59,43 +57,37 @@ func InitiateGame(appId int) error {
 
 	return nil
 }
-func InitiateGames() {
-	// Set client options
+func InitiateApps() {
+
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 
-	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Check the connection
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Get a handle for your collection
-	collection := client.Database(config.GlobalSettings.DatabaseName).Collection("games_list")
+	collection := client.Database(config.GlobalSettings.DatabaseName).Collection("apps_list")
 
-	// Define an empty filter to match all documents
 	filter := bson.D{{}}
 
-	// Find all documents
 	cursor, err := collection.Find(context.TODO(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var games []GameId
-	if err = cursor.All(context.TODO(), &games); err != nil {
+	var apps []AppInitial
+	if err = cursor.All(context.TODO(), &apps); err != nil {
 		log.Fatal(err)
 	}
 
-	for _, game := range games {
-		// Now you can work with each game
-		log.Println(game)
-		err = InitiateGame(game.AppId)
+	for _, app := range apps {
+		log.Println(app)
+		err = InitiateApp(app)
 		fmt.Println(err)
 	}
 }

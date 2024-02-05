@@ -14,10 +14,15 @@ func main() {
 
 	config.LoadSettings()
 
-	//err := services.InitiateGame("2071280")
+	//err := services.InitiateApp("2071280")
 	//
 	//if err != nil {
 	//	panic(err)
 	//}
-	services.InitiateGames()
+	services.InitiateApps()
+	//res, err := steam_api.GetAppNews(config.GlobalSettings.AppKey, 2071280, 0, 300) // TODO how good is that approach?
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(res)
 }

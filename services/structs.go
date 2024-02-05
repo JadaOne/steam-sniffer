@@ -17,7 +17,7 @@ func (p Price) FormatPrice() {
 	p.PriceFormatted = strconv.Itoa(integerPart) + "," + strconv.Itoa(fractionalPart)
 }
 
-type Game struct {
+type App struct {
 	Type                string                `json:"type"`
 	Name                string                `json:"name"`
 	SteamAppid          int                   `json:"steam_appid"`
@@ -40,52 +40,58 @@ type Game struct {
 	Categories          []steam_api.Category  `json:"categories"`
 	Genres              []steam_api.Genre     `json:"genres"`
 	ReleaseDate         steam_api.ReleaseDate `json:"release_date"`
+	CheckPrice          bool                  `json:"checkPrice"`
+	CheckNews           bool                  `json:"checkNews"`
 }
 
-func FromGameData(gameData steam_api.GameData) Game {
+func FromAppData(appData steam_api.AppData, checkPrice, checkNews bool) App {
 	price := Price{
-		Currency:       gameData.PriceOverview.Currency,
-		Price:          gameData.PriceOverview.Initial,
-		PriceFormatted: strconv.Itoa(gameData.PriceOverview.Final/100) + "," + strconv.Itoa(gameData.PriceOverview.Final%100),
+		Currency:       appData.PriceOverview.Currency,
+		Price:          appData.PriceOverview.Initial,
+		PriceFormatted: strconv.Itoa(appData.PriceOverview.Final/100) + "," + strconv.Itoa(appData.PriceOverview.Final%100),
 	}
 	currentLowest := Price{}
-	if gameData.PriceOverview.Initial > gameData.PriceOverview.Final {
+	if appData.PriceOverview.Initial > appData.PriceOverview.Final {
 		currentLowest = Price{
-			Currency:       gameData.PriceOverview.Currency,
-			Price:          gameData.PriceOverview.Final,
-			PriceFormatted: strconv.Itoa(gameData.PriceOverview.Final/100) + "," + strconv.Itoa(gameData.PriceOverview.Final%100),
+			Currency:       appData.PriceOverview.Currency,
+			Price:          appData.PriceOverview.Final,
+			PriceFormatted: strconv.Itoa(appData.PriceOverview.Final/100) + "," + strconv.Itoa(appData.PriceOverview.Final%100),
 		}
 	} else {
 		currentLowest = price
 	}
 	price.FormatPrice()
 	currentLowest.FormatPrice()
-	return Game{
-		Type:                gameData.Type,
-		Name:                gameData.Name,
-		SteamAppid:          gameData.SteamAppid,
-		RequiredAge:         gameData.RequiredAge,
-		IsFree:              gameData.IsFree,
-		ControllerSupport:   gameData.ControllerSupport,
-		DLC:                 gameData.DLC,
-		DetailedDescription: gameData.DetailedDescription,
-		AboutTheGame:        gameData.AboutTheGame,
-		ShortDescription:    gameData.ShortDescription,
-		SupportedLanguages:  gameData.SupportedLanguages,
-		Reviews:             gameData.Reviews,
-		Website:             gameData.Website,
-		Developers:          gameData.Developers,
-		Publishers:          gameData.Publishers,
+	return App{
+		Type:                appData.Type,
+		Name:                appData.Name,
+		SteamAppid:          appData.SteamAppid,
+		RequiredAge:         appData.RequiredAge,
+		IsFree:              appData.IsFree,
+		ControllerSupport:   appData.ControllerSupport,
+		DLC:                 appData.DLC,
+		DetailedDescription: appData.DetailedDescription,
+		AboutTheGame:        appData.AboutTheGame,
+		ShortDescription:    appData.ShortDescription,
+		SupportedLanguages:  appData.SupportedLanguages,
+		Reviews:             appData.Reviews,
+		Website:             appData.Website,
+		Developers:          appData.Developers,
+		Publishers:          appData.Publishers,
 		Price:               price,
 		CurrentLowest:       currentLowest,
-		Platforms:           gameData.Platforms,
-		Metacritic:          gameData.Metacritic,
-		Categories:          gameData.Categories,
-		Genres:              gameData.Genres,
-		ReleaseDate:         gameData.ReleaseDate,
+		Platforms:           appData.Platforms,
+		Metacritic:          appData.Metacritic,
+		Categories:          appData.Categories,
+		Genres:              appData.Genres,
+		ReleaseDate:         appData.ReleaseDate,
+		CheckPrice:          checkPrice,
+		CheckNews:           checkNews,
 	}
 }
 
-type GameId struct {
-	AppId int `json:"appId"`
+type AppInitial struct {
+	AppId      int  `json:"appId"`
+	CheckPrice bool `json:"checkPrice"`
+	CheckNews  bool `json:"checkNews"`
 }

@@ -15,10 +15,10 @@ const SteamAPIUrl = SteamUrl + "/api/"
 
 const ApiSteamUrl = "http://api.steampowered.com/"
 
-func GetAppDetails(apiKey string, filters []string, appIds ...int) ([]GameData, error) {
+func GetAppDetails(apiKey string, filters []string, appIds ...int) ([]AppData, error) {
 
 	if len(filters) == 0 && len(appIds) > 1 {
-		return []GameData{}, fmt.Errorf("to query multiple apps, at least one filter should be provided")
+		return []AppData{}, fmt.Errorf("to query multiple apps, at least one filter should be provided")
 	}
 
 	requestURL := SteamAPIUrl + "appdetails"
@@ -58,14 +58,14 @@ func GetAppDetails(apiKey string, filters []string, appIds ...int) ([]GameData, 
 		os.Exit(1)
 	}
 
-	var response map[string]GameResponse
+	var response map[string]AppResponse
 	err = json.Unmarshal(resBody, &response)
 	if err != nil {
 		fmt.Printf("client: could not unmarshal json: %s\n", err)
 		os.Exit(1)
 	}
 
-	result := make([]GameData, 0)
+	result := make([]AppData, 0)
 	for _, value := range response {
 		if value.Success == true {
 			result = append(result, value.Data)

@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// Game details
+// App details
 
 type PriceOverview struct {
 	Currency         string `json:"currency"`
@@ -47,7 +47,8 @@ type ReleaseDate struct {
 	Date       string `json:"date"`
 }
 
-type GameData struct {
+// AppData !TODO replace App with app
+type AppData struct {
 	Type                string        `json:"type"`
 	Name                string        `json:"name"`
 	SteamAppid          int           `json:"steam_appid"`
@@ -71,8 +72,8 @@ type GameData struct {
 	ReleaseDate         ReleaseDate   `json:"release_date"`
 }
 
-func (gd *GameData) UnmarshalJSON(data []byte) error {
-	type Alias GameData
+func (gd *AppData) UnmarshalJSON(data []byte) error {
+	type Alias AppData
 	aux := &struct {
 		RequiredAge interface{} `json:"required_age"`
 		*Alias
@@ -92,9 +93,9 @@ func (gd *GameData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type GameResponse struct {
-	Success bool     `json:"success"`
-	Data    GameData `json:"data"`
+type AppResponse struct {
+	Success bool    `json:"success"`
+	Data    AppData `json:"data"`
 }
 
 // News
