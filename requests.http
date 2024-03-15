@@ -1,0 +1,8 @@
+
+
+GET https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?key=3CE1C3E26481CE20CBA13961D1123A52&appid=363440&count=2 HTTP/1.1
+Content-Type: application/json
+#Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzQ2MDQxODMsImlkIjoxLCJwayI6MSwiZW1haWwiOiJ0ZXN0QHRlc3QudGVzdCIsInVzZXJuYW1lIjoidGVzdCIsImhhc1Bhc3N3b3JkIjp0cnVlLCJvcmlnX2lhdCI6MTcwMzA2ODE4M30._B7DSZy2C-FuWSgWHa5F4ezWsD2C7rCExBXitl12nk0
+#latest ^
+
+//{}  body goes here

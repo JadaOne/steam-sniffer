@@ -106,7 +106,7 @@ type NewsResponse struct {
 
 type AppNews struct {
 	Appid     int    `json:"appid"`
-	Newsitems []News `json:"newsitems"`
+	NewsItems []News `json:"newsitems"`
 	Count     int    `json:"count"`
 }
 

@@ -11,7 +11,7 @@ import (
 )
 
 const SteamUrl = "https://store.steampowered.com/"
-const SteamAPIUrl = SteamUrl + "/api/"
+const SteamAPIUrl = SteamUrl + "api/"
 
 const ApiSteamUrl = "http://api.steampowered.com/"
 

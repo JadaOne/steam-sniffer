@@ -20,6 +20,10 @@ func main() {
 	//	panic(err)
 	//}
 	services.InitiateApps()
+	err := services.CollectNews()
+	if err != nil {
+		panic(err)
+	}
 	//res, err := steam_api.GetAppNews(config.GlobalSettings.AppKey, 2071280, 0, 300) // TODO how good is that approach?
 	//if err != nil {
 	//	panic(err)
